@@ -46,3 +46,20 @@ public:
         return 1.0;
     }
 };
+void AsteroidKusagi(Gemi& Gemi) {
+    cout << "Asteroid kusagina yakalandiniz, Dikkatli Olunuz !" << endl;
+    Gemi.saglik -= 10 * Gemi.hasarKatsayisi();// alinan hasar
+    cout << "Geminiz hasar aldı. Guncel gemi sagligi: " << Gemi.saglik << endl;
+}
+
+void TerkedilmisGezegen(Gemi& Gemi) {
+    cout << "Tebrikler kesfedilmemis gezegene ulastiniz " << endl;
+    if (rand() % 2) {
+        cout << "TEBRIKLER!! 10 altin kazandiniz!" << endl;
+        Gemi.para += 10;
+    } else {
+        cout << " DIKKAT!!! Uzay korsanlari pususuna dusuruldunuz!!! " << endl;
+        Gemi.saglik -= 20 * Gemi.hasarKatsayisi(); // alinan hasar
+        cout << "EYVAHH!!! Geminiz hasar aldi. Guncel gemi sagligi: " << Gemi.saglik << endl;
+    }
+}
