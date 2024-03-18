@@ -119,3 +119,52 @@ void uzayKorsanlari(Gemi& gemi) {
     }
 }
 
+int main() {
+    srand(time(0));
+    Gemi* gemi;
+    int gemiTipi;
+
+    cout << "Gemi tipinizi secin:\n1. Hizli Gemi\n2. Guclu Gemi\n3. Normal Gemi\nSeciminizi girin: ";
+    cin >> gemiTipi;
+
+    switch (gemiTipi) {
+        case 1:
+            gemi = new HizliGemi();
+            break;
+        case 2:
+            gemi = new GucluGemi();
+            break;
+        case 3:
+            gemi = new NormalGemi();
+            break;
+        default:
+            cout << "Gecersiz secim. Normal Gemi olarak ayarlandı." << endl;// saçma sapan seçim yaparsan alırsın normal gemiyi
+            gemi = new NormalGemi();
+    }
+
+    for (int i = 0; i < 5; i++) {
+        int olay = rand() % 3;
+        switch (olay) {
+            case 0:
+                asteroidKusagi(*gemi);
+                break;
+            case 1:
+                terkedilmisGezegen(*gemi);
+                break;
+            case 2:
+                uzayKorsanlari(*gemi);
+                break;
+        }
+
+        if (gemi->yakit <= 1) {
+            cout << "Yakitiniz tukendi. Oyun bitti. Tekrar oyna " << endl;
+            break;
+        }
+    }
+
+    int skor = gemi->yakit * 5 + gemi->saglik * 10 + gemi->para * 10;
+    cout << "Oyun bitti. Skorunuz: " << skor << endl;
+
+    delete gemi;
+    return 0;
+}
