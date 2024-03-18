@@ -10,3 +10,4 @@ Adlandırmayı değiştirelim ingilizce karakterlere uygun olsun. ı ve ü olmas
 ~Ömer Faruk İnciler 15.03.2024
 Dün eklemeyi unuttum.Uzay korsanları fonksiyonunu ekledim bugün. Tekrar göz gezdirdim yazdığımız kodlara oyunu classların içinde olmayan 3 fonksiyon ile oynamamız güzel olmuş.Interface ve sublarda olan overrided fonksiyonlar şeklinde olsaydı boşa kopyalamalar yapılmış olurdu,daha yavaş çalışırdı,boyut büyürdü ve Solid principles'ın Single responsibility ilkesine aykırı olurdu.Belki rand yerine başka alternatif eklenebilir. Yarın smart pointerlı ve endl'lerin \n'lerle değiştirilmiş halini yükleyecez.Uml diagramını da githuba yükleyecez. -Rasih Görkem Şimşek 17.03.2024
 Yarın magic numberları da kaldıracaz ve headerlara ve diğer cpp lere ayıracaz kodu.-Rasih Görkem Şimşek 17.03.2024
+Header ve cpp'lere ayrıldıktan sonra ayrı ayrı yükleyecez -Rasih Görkem Şimşek -18.03.2024
