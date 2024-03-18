@@ -1,15 +1,41 @@
 #include <iostream>
-#include <string>
 #include <cstdlib>
 #include <ctime>
+#include <memory>
+#include <string>
 
 using namespace std;
 
-class Gemi {
+// const correctness yaptık ve magic number yok
+const int baslangicSaglik = 100;
+const int baslangicYakit = 100;
+const int yeterliYakit = 33;
+const int asteroidHasar = 10;
+const int korsanHasar = 20;
+const int savasHasar = 30;
+const int altinKazanimi = 10;
+const float hizliGemiKacmaOlasiligi = 1.5f;
+const float hizliGemiHasarKatsayisi = 1.5f;
+const float gucluGemiKacmaOlasiligi = 0.5f;
+const float gucluGemiHasarKatsayisi = 0.5f;
+const float normalGemiKacmaOlasiligi = 1.0f;
+const float normalGemiHasarKatsayisi = 1.0f;
+const int kacisSecimi = 1;
+const int savasSecimi = 2;
+const int pazarlikSecimi = 3;
+const int yakitHarcamasiKacis = 33;
+const int olaySayisi = 5;
+const int olasilik100 = 100;
+const int altinPazarlikMinimum = 10;
+const int altinPazarlikMaximum = 30;
+const int altinPazarlikCarpan = 10;
+
+class Gemi {    //arayüzümüz
 public:
-    int saglik = 100;
-    int yakit = 100;
+    int saglik = baslangicSaglik;
+    int yakit = baslangicYakit;
     int para = 0;
+
     virtual float kacmaOlasiligi() = 0;
     virtual float hasarKatsayisi() = 0;
 };
@@ -17,56 +43,59 @@ public:
 class HizliGemi : public Gemi {
 public:
     float kacmaOlasiligi() override {
-        return 1.5;
+        return hizliGemiKacmaOlasiligi;
     }
 
     float hasarKatsayisi() override {
-        return 1.5;
+        return hizliGemiHasarKatsayisi;
     }
 };
 
 class GucluGemi : public Gemi {
 public:
     float kacmaOlasiligi() override {
-        return 0.5;
+        return gucluGemiKacmaOlasiligi;
     }
 
     float hasarKatsayisi() override {
-        return 0.5;
+        return gucluGemiHasarKatsayisi;
     }
 };
 
 class NormalGemi : public Gemi {
 public:
     float kacmaOlasiligi() override {
-        return 1.0;
+        return normalGemiKacmaOlasiligi;
     }
 
     float hasarKatsayisi() override {
-        return 1.0;
+        return normalGemiHasarKatsayisi;
     }
 };
-void AsteroidKusagi(Gemi& Gemi) {
+
+void asteroidKusagi(shared_ptr<Gemi> gemi) { // shared pointer kullanma kararı aldık
     cout << "Asteroid kusagina yakalandiniz, Dikkatli Olunuz !" << endl;
-    Gemi.saglik -= 10 * Gemi.hasarKatsayisi();// alinan hasar
-    cout << "Geminiz hasar aldı. Guncel gemi sagligi: " << Gemi.saglik << endl;
+    gemi->saglik -= asteroidHasar * gemi->hasarKatsayisi();
+    cout << "Geminiz hasar aldi. Guncel gemi sagligi: " << gemi->saglik << endl;
 }
 
-void TerkedilmisGezegen(Gemi& Gemi) {
+void terkedilmisGezegen(shared_ptr<Gemi> gemi) {
     cout << "Tebrikler kesfedilmemis gezegene ulastiniz " << endl;
     if (rand() % 2) {
         cout << "TEBRIKLER!! 10 altin kazandiniz!" << endl;
-        Gemi.para += 10;
+        gemi->para += altinKazanimi;
     } else {
-        cout << " DIKKAT!!! Uzay korsanlari pususuna dusuruldunuz!!! " << endl;
-        Gemi.saglik -= 20 * Gemi.hasarKatsayisi(); // alinan hasar
-        cout << "EYVAHH!!! Geminiz hasar aldi. Guncel gemi sagligi: " << Gemi.saglik << endl;
+        cout << " DIKKAT!!! Uzay korsanlari pususuna dusuruldunuz!!!" << endl;
+        gemi->saglik -= korsanHasar * gemi->hasarKatsayisi();
+        cout << "EYVAHH!!! Geminiz hasar aldi. Guncel gemi sagligi: " << gemi->saglik << endl;
     }
 }
-void uzayKorsanlari(Gemi& gemi) {
+
+void uzayKorsanlari(shared_ptr<Gemi> gemi) {
     cout << "Uzay korsanlari saldiriyor! Arkani kolla " << endl;
-    int secim, istenenAltin;
+    int secim;
     bool gecerliSecim = false;
+    int istenenAltin;
 
     while (!gecerliSecim) {
         cout << "1. Kac (33 yakit harcar)\n2. Savas\n3. Pazarlik";
@@ -74,54 +103,51 @@ void uzayKorsanlari(Gemi& gemi) {
         cin >> secim;
 
         switch (secim) {
-            case 1: // Kaçma seçimi
-                gecerliSecim = true;
-                if (gemi.yakit < 33) {
+            case kacisSecimi:
+                if (gemi->yakit < yakitHarcamasiKacis) {
                     cout << "Kacmak icin yeterli yakitiniz yok!" << endl;
-                    gecerliSecim = false; //  yeniden seçim yaptırmak için
                 } else {
-                    gemi.yakit -= 33;
-                    if (rand() % 100 < 50 * gemi.kacmaOlasiligi()) {
+                    gemi->yakit -= yakitHarcamasiKacis;
+                    if (rand() % olasilik100 < gemi->kacmaOlasiligi() * olasilik100) {
                         cout << "Basariyla kactiniz!" << endl;
+                        gecerliSecim = true;
                     } else {
                         cout << "Kacamadiniz ve naneyi yediniz. Korsanlar hala pesinizde!" << endl;
+                        gecerliSecim = false;// tekrar döngüye sokuyo, sanırım gereksiz ama
                     }
                 }
                 break;
-            case 2: // Savaş seçimi
-                gecerliSecim = true;
+            case savasSecimi:
                 if (rand() % 2) {
                     cout << "Korsanlarin icinden gectiniz!!!" << endl;
                 } else {
-                    gemi.saglik -= 30 * gemi.hasarKatsayisi();
-                    cout << "Savasi ve baska bir seyi  kaybettiniz; ayrica hasar aldiniz. Guncel saglik: " << gemi.saglik << endl;
+                    gemi->saglik -= savasHasar * gemi->hasarKatsayisi();
+                    cout << "Savasi ve baska bir seyi kaybettiniz; ayrica hasar aldiniz. Guncel saglik: " << gemi->saglik << endl;
                 }
+                gecerliSecim = true;
                 break;
-            case 3: // Pazarlık
-                istenenAltin = (rand() % 3 + 1) * 10; // Korsanların istediği altın miktarı
+            case pazarlikSecimi:
+                istenenAltin = (rand() % 3 + 1) * altinPazarlikCarpan;
                 cout << "Korsanlar sizden " << istenenAltin << " altin istiyor." << endl;
                 cout << "Korsanlar Beyi: Ya parani ya da ...'nu alirim yegenim " << endl;
-                if (istenenAltin <= gemi.para) {
-                    gemi.para -= istenenAltin;
-                    gecerliSecim = true;
+                if (istenenAltin <= gemi->para) {
+                    gemi->para -= istenenAltin;
                     cout << "Korsanlar Beyi: Guzel boyle adam ol, gelecekte vermeye devam " << endl;
-
+                    gecerliSecim = true;
                 } else {
                     cout << "Korsanlara odeyecek kadar altininiz yok." << endl;
                     cout << "Ya savasmali ya da kacmalisiniz." << endl;
-                    // yeniden seçime zorlar ve tekrar pazarlık seçse de yeniden seçime zorlar.
                 }
                 break;
             default:
                 cout << "Gecersiz secim. Tekrar deneyin." << endl;
-                // bu yazıyı görmek isteyen  1 2 3 dışında bir sayı yazsın sürekli
         }
     }
 }
 
 int main() {
-    srand(time(0));
-    Gemi* gemi;
+    srand(static_cast<unsigned int>(time(nullptr)));
+    shared_ptr<Gemi> gemi;
     int gemiTipi;
 
     cout << "Gemi tipinizi secin:\n1. Hizli Gemi\n2. Guclu Gemi\n3. Normal Gemi\nSeciminizi girin: ";
@@ -129,35 +155,35 @@ int main() {
 
     switch (gemiTipi) {
         case 1:
-            gemi = new HizliGemi();
+            gemi = make_shared<HizliGemi>();
             break;
         case 2:
-            gemi = new GucluGemi();
+            gemi = make_shared<GucluGemi>();
             break;
         case 3:
-            gemi = new NormalGemi();
+            gemi = make_shared<NormalGemi>();
             break;
         default:
-            cout << "Gecersiz secim. Normal Gemi olarak ayarlandı." << endl;// saçma sapan seçim yaparsan alırsın normal gemiyi
-            gemi = new NormalGemi();
+            cout << "Gecersiz secim. Normal Gemi olarak ayarlandı." << endl;
+            gemi = make_shared<NormalGemi>();
     }
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < olaySayisi; i++) {
         int olay = rand() % 3;
         switch (olay) {
             case 0:
-                asteroidKusagi(*gemi);
+                asteroidKusagi(gemi);
                 break;
             case 1:
-                terkedilmisGezegen(*gemi);
+                terkedilmisGezegen(gemi);
                 break;
             case 2:
-                uzayKorsanlari(*gemi);
+                uzayKorsanlari(gemi);
                 break;
         }
 
         if (gemi->yakit <= 1) {
-            cout << "Yakitiniz tukendi. Oyun bitti. Tekrar oyna " << endl;
+            cout << "Yakitiniz tukendi. Oyun bitti." << endl;
             break;
         }
     }
@@ -165,6 +191,5 @@ int main() {
     int skor = gemi->yakit * 5 + gemi->saglik * 10 + gemi->para * 10;
     cout << "Oyun bitti. Skorunuz: " << skor << endl;
 
-    delete gemi;
     return 0;
 }
