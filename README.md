@@ -14,3 +14,5 @@ Header ve cpp'lere ayrıldıktan sonra ayrı ayrı yükleyecez -Rasih Görkem Ş
 Şimdilik ayırmayı başaramazsak diye çalışan son smart pointerlı ve const correctnesslı kodu main.cpp'ye yükledim -Rasih Görkem Şimşek
 
 Shared pointer kullandığımız için header ve cpp dosyalarına ayrıştıramamışız. Diğer yapanlar unique pointer kullanarak sorunu çözeceğimizi söyledirler. Bunun için kodu uniqe pointer kullanarak header ve cpp dosyalarına ayrıştırdım. - Ömer Faruk İnciler
+
+Ayrıca main.cpp içinde fonksiyon decleracitionları ve definitionları vardı onları da oyun classında kullanarak main.cpp dosyasını çok sade hale getirdim. -Ömer Faruk İnciler
