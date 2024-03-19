@@ -12,3 +12,5 @@ Dün eklemeyi unuttum.Uzay korsanları fonksiyonunu ekledim bugün. Tekrar göz 
 Yarın magic numberları da kaldıracaz ve headerlara ve diğer cpp lere ayıracaz kodu.-Rasih Görkem Şimşek 17.03.2024
 Header ve cpp'lere ayrıldıktan sonra ayrı ayrı yükleyecez -Rasih Görkem Şimşek -18.03.2024
 Şimdilik ayırmayı başaramazsak diye çalışan son smart pointerlı ve const correctnesslı kodu main.cpp'ye yükledim -Rasih Görkem Şimşek
+
+Shared pointer kullandığımız için header ve cpp dosyalarına ayrıştıramamışız. Diğer yapanlar unique pointer kullanarak sorunu çözeceğimizi söyledirler. Bunun için kodu uniqe pointer kullanarak header ve cpp dosyalarına ayrıştırdım. - Ömer Faruk İnciler
